@@ -1,4 +1,6 @@
-// Space (2)
+/*
+ * Space (2)
+ */
 function A() {
   return;
 }

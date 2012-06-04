@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 
@@ -23,13 +24,16 @@ namespace IndentAutoConfigurator
         [Order(After = PredefinedAdornmentLayers.Selection, Before = PredefinedAdornmentLayers.Text)]
         public AdornmentLayerDefinition editorAdornmentLayer = null;
 
+        [Import]
+        public IClassifierAggregatorService AggregatorFactory = null; 
+
         /// <summary>
         /// Instantiates a IndentAutoConfigurator manager when a textView is created.
         /// </summary>
         /// <param name="textView">The <see cref="IWpfTextView"/> upon which the adornment should be placed</param>
         public void TextViewCreated(IWpfTextView textView)
         {
-            new IndentAutoConfigurator(textView);
+            new IndentAutoConfigurator(textView, AggregatorFactory);
         }
     }
     #endregion //Adornment Factory

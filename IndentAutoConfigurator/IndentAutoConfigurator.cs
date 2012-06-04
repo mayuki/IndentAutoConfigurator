@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 
@@ -15,10 +17,12 @@ namespace IndentAutoConfigurator
     {
         //private IAdornmentLayer _layer;
         private IWpfTextView _view;
+        private IClassifierAggregatorService _classifierAggregatorService;
 
-        public IndentAutoConfigurator(IWpfTextView view)
+        public IndentAutoConfigurator(IWpfTextView view, IClassifierAggregatorService classifierAggregatorService)
         {
             _view = view;
+            _classifierAggregatorService = classifierAggregatorService;
             //_layer = view.GetAdornmentLayer("IndentAutoConfigurator");
 
             UpdateSetting();
@@ -29,6 +33,11 @@ namespace IndentAutoConfigurator
             CodeIndention codeIndention = new CodeIndention();
             foreach (var line in _view.TextSnapshot.Lines)
             {
+                // Classification: http://code.msdn.microsoft.com/ToDoGlyphFactory-ef2db126/sourcecode?fileId=72&pathId=393561789
+                var isInComment = _classifierAggregatorService.GetClassifier(_view.TextBuffer).GetClassificationSpans(line.Extent).Any(x => x.ClassificationType.Classification.ToLower().Contains("comment"));
+                if (isInComment)
+                    continue;
+
                 var text = line.GetText();
                 if (text.StartsWith(" "))
                 {

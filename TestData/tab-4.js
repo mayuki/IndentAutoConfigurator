@@ -1,4 +1,6 @@
-// Tab (4)
+/*
+ * Tab (4)
+ */
 function A() {
 	return;
 }
