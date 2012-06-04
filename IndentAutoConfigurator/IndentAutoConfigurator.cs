@@ -30,7 +30,7 @@ namespace IndentAutoConfigurator
 
         private void UpdateSetting()
         {
-            CodeIndention codeIndention = new CodeIndention();
+            CodeIndention codeIndention = null;
             foreach (var line in _view.TextSnapshot.Lines)
             {
                 // Classification: http://code.msdn.microsoft.com/ToDoGlyphFactory-ef2db126/sourcecode?fileId=72&pathId=393561789
