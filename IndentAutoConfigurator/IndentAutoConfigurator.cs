@@ -1,15 +1,17 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 
-namespace IndentAutoConfigurator
+namespace Misuzilla.IndentAutoConfigurator
 {
     ///<summary>
     ///</summary>
@@ -18,14 +20,50 @@ namespace IndentAutoConfigurator
         //private IAdornmentLayer _layer;
         private IWpfTextView _view;
         private IClassifierAggregatorService _classifierAggregatorService;
+        private IServiceProvider _serviceProvider;
+        private IndentAutoConfiguratorService _service;
 
-        public IndentAutoConfigurator(IWpfTextView view, IClassifierAggregatorService classifierAggregatorService)
+        private CodeIndention CurrentCodeIndention { get; set; }
+
+        public IndentAutoConfigurator(IWpfTextView view, IClassifierAggregatorService classifierAggregatorService, IServiceProvider serviceProvider)
         {
             _view = view;
             _classifierAggregatorService = classifierAggregatorService;
+            _serviceProvider = serviceProvider;
+
+            //var mcs = ServiceProvider.GlobalProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            _service = _serviceProvider.GetService(typeof(IndentAutoConfiguratorService)) as IndentAutoConfiguratorService;
+            var cmd = _service.CmdIndentSetting;
+            cmd.Visible = true;
+
             //_layer = view.GetAdornmentLayer("IndentAutoConfigurator");
 
+            _view.GotAggregateFocus += OnGotAggregateFocus;
+            _view.LostAggregateFocus += OnLostAggregateFocus;
+
             UpdateSetting();
+        }
+
+        private void MenuItemCallback(object sender, EventArgs e)
+        {
+            MessageBox.Show("MenuItemCallback");
+        }
+
+        private void OnLostAggregateFocus(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("LostAggregateFocus");
+            //_service.CmdIndentSetting.Visible = false;
+        }
+
+        private void OnGotAggregateFocus(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("GotAggregateFocus");
+            //_service.CmdIndentSetting.Visible = true;
+            var cmd = _service.CmdIndentSetting as OleMenuCommand;
+            cmd.Text = "Indent Setting: " + (
+                            (CurrentCodeIndention == null) ? "(Default)"
+                            : (CurrentCodeIndention.IsTab ? "Tab" : "Space (" + CurrentCodeIndention.IndentSize + ")")
+                       );
         }
 
         private void UpdateSetting()
@@ -59,6 +97,8 @@ namespace IndentAutoConfigurator
             _view.Options.SetOptionValue(DefaultOptions.ConvertTabsToSpacesOptionId, !codeIndention.IsTab);
             if (!codeIndention.IsTab)
                 _view.Options.SetOptionValue(DefaultOptions.IndentSizeOptionId, codeIndention.IndentSize);
+
+            CurrentCodeIndention = codeIndention;
         }
 
         private class CodeIndention
