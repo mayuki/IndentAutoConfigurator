@@ -163,6 +163,7 @@
   <ItemGroup>
     <VSCTCompile Include="IndentAutoConfigurator.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
+      <SubType>Designer</SubType>
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>

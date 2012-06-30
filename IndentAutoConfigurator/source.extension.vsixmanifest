@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="e6ef0bd4-6fcd-444e-bb9f-02461df042c5" Version="1.0" Language="en-US" Publisher="Mayuki Sawatari" />
-    <DisplayName>IndentAutoConfigurator</DisplayName>
-    <Description>Information about my package</Description>
+    <Identity Id="e6ef0bd4-6fcd-444e-bb9f-02461df042c5" Version="1.0" Language="ja-JP" Publisher="Mayuki Sawatari" />
+    <DisplayName>Indent Auto Configurator</DisplayName>
+    <Description>ファイルの内容のインデントに合わせてインデント設定を自動調整します。</Description>
   </Metadata>
   <Installation InstalledByMsi="false">
     <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="11.0" />

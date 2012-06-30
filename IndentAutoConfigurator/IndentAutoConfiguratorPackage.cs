@@ -84,6 +84,7 @@ namespace Misuzilla.IndentAutoConfigurator
         /// </summary>
         private void MenuItemCallback(object sender, EventArgs e)
         {
+            return;
             // Show a Message Box to prove we were here
             IVsUIShell uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
             Guid clsid = Guid.Empty;
